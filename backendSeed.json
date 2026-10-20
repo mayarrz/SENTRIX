@@ -1,0 +1,312 @@
+{
+  "assets": [
+    {
+      "id": "AST-DEC-01",
+      "name": "Internal Admin Portal",
+      "type": "admin_portal",
+      "decoyStatus": "active_decoy",
+      "riskLevel": "critical",
+      "lastSimulatedInteraction": "2026-10-16T00:13:48.489Z",
+      "interactionCount": 42,
+      "deployedEnvironment": "Corporate-DMZ-VLAN-10",
+      "description": "High-interaction fake administrative console miming internal executive single sign-on.",
+      "canaryPayload": "CANARY-TOKEN-ADM-9941",
+      "deceptionStrategy": "Collects adversary credential stuffing patterns and logs reconnaissance velocity.",
+      "fakeResourcePath": "/internal/admin-sso.corporate.local"
+    },
+    {
+      "id": "AST-DEC-02",
+      "name": "Finance Database (Payroll 2026)",
+      "type": "database_record",
+      "decoyStatus": "active_decoy",
+      "riskLevel": "critical",
+      "lastSimulatedInteraction": "2026-10-15T23:40:48.490Z",
+      "interactionCount": 78,
+      "deployedEnvironment": "Finance-Isolated-Subnet-4",
+      "description": "Decoy PostgreSQL schema seeded with synthetic employee compensation entries and honeypot records.",
+      "canaryPayload": "CANARY-SQL-TRIGGER-7721",
+      "deceptionStrategy": "Monitors exfiltration queries (SELECT * INTO OUTFILE) and fires instantaneous critical alerts.",
+      "fakeResourcePath": "db-fin-prod.internal.corp:5432/payroll_vault"
+    },
+    {
+      "id": "AST-DEC-03",
+      "name": "Employee Records & PII Archive",
+      "type": "database_record",
+      "decoyStatus": "lure_file",
+      "riskLevel": "high",
+      "lastSimulatedInteraction": "2026-10-15T22:35:48.490Z",
+      "interactionCount": 29,
+      "deployedEnvironment": "HR-Internal-Storage-01",
+      "description": "Synthetic HR ledger with 500 generated anonymized worker profiles and embedded tracking webhooks.",
+      "canaryPayload": "CANARY-BEACON-HR-4402",
+      "deceptionStrategy": "Emits alert upon any file export or batch iteration attempt.",
+      "fakeResourcePath": "/storage/shared/hr/employee_pii_master_2026.csv"
+    },
+    {
+      "id": "AST-DEC-04",
+      "name": "Backup Configuration & Cloud Keys",
+      "type": "config_file",
+      "decoyStatus": "canary_token",
+      "riskLevel": "critical",
+      "lastSimulatedInteraction": "2026-10-16T00:17:48.490Z",
+      "interactionCount": 63,
+      "deployedEnvironment": "DevOps-Staging-Cluster-03",
+      "description": "Fictional YAML/ENV backup file containing inactive lure AWS tokens and honey-credentials.",
+      "canaryPayload": "AKIA-MOCK-CANARY-HONEY-KEY-88",
+      "deceptionStrategy": "Immediate webhook tripping if attacker tests keys against public canary endpoint.",
+      "fakeResourcePath": "/var/backups/.env.production.bak"
+    },
+    {
+      "id": "AST-DEC-05",
+      "name": "Internal API Documentation (Swagger)",
+      "type": "api_endpoint",
+      "decoyStatus": "shadow_service",
+      "riskLevel": "medium",
+      "lastSimulatedInteraction": "2026-10-15T20:45:48.490Z",
+      "interactionCount": 15,
+      "deployedEnvironment": "Engineering-Internal-Mesh",
+      "description": "Decoy OpenAPI spec listing fake microservices with artificial delays to trap crawlers.",
+      "canaryPayload": "API-BEARER-TRAP-TOKEN-11",
+      "deceptionStrategy": "Fingerprints automated scraping tools and directory enumeration bots.",
+      "fakeResourcePath": "https://api-internal.corp.local/docs/v3/openapi.json"
+    },
+    {
+      "id": "AST-DEC-06",
+      "name": "Customer Records Archive (Historical)",
+      "type": "document_repository",
+      "decoyStatus": "lure_file",
+      "riskLevel": "high",
+      "lastSimulatedInteraction": "2026-10-15T21:25:48.490Z",
+      "interactionCount": 31,
+      "deployedEnvironment": "Legacy-Storage-Volume-B",
+      "description": "Honey-archive pretending to be 2024-2025 enterprise customer contracts with watermark canaries.",
+      "canaryPayload": "WATERMARK-DOC-HASH-3391",
+      "deceptionStrategy": "Monitors SMB file opens and reads across legacy network shares.",
+      "fakeResourcePath": "/smb/shares/legal/archive/enterprise_contracts.zip"
+    },
+    {
+      "id": "AST-DEC-07",
+      "name": "Kubernetes Cluster Credentials",
+      "type": "config_file",
+      "decoyStatus": "canary_token",
+      "riskLevel": "critical",
+      "lastSimulatedInteraction": "2026-10-15T18:25:48.490Z",
+      "interactionCount": 19,
+      "deployedEnvironment": "Infra-K8s-Management",
+      "description": "Honey-kubeconfig file placed in standard dev home directory with non-routable synthetic tokens.",
+      "canaryPayload": "KUBE-HONEY-BEARER-6620",
+      "deceptionStrategy": "Detects lateral movement across compromised developer workstation jump boxes.",
+      "fakeResourcePath": "/home/ubuntu/.kube/config.decoy"
+    },
+    {
+      "id": "AST-DEC-08",
+      "name": "Executive M&A Strategic Plan 2026",
+      "type": "document_repository",
+      "decoyStatus": "lure_file",
+      "riskLevel": "high",
+      "lastSimulatedInteraction": "2026-10-15T15:45:48.490Z",
+      "interactionCount": 12,
+      "deployedEnvironment": "Exec-Secure-Drop-01",
+      "description": "Bait PDF document containing synthetic merger drafts designed to attract targeted espionage.",
+      "canaryPayload": "PDF-DNS-CANARY-RESOLVER-552",
+      "deceptionStrategy": "Fires outbound honeydns lookup upon document rendering in Adobe Acrobat / PDF engines.",
+      "fakeResourcePath": "/share/executives/Q3_Acquisition_Confidential.pdf"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "SCN-ADMIN-HARVEST",
+      "title": "Admin Portal Credential Harvesting",
+      "description": "Simulates an adversary discovering the decoy Admin Portal, probing hidden authentication endpoints, and attempting brute-force credential entry.",
+      "threatActorProfile": "External Opportunistic Attacker",
+      "expectedTTP": "T1595 (Active Scanning), T1110 (Brute Force), T1078 (Valid Accounts)",
+      "estimatedDurationSeconds": 8,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "actionName": "Honeypot Port Discovery",
+          "resourceName": "Internal Admin Portal",
+          "resourceId": "AST-DEC-01",
+          "eventType": "ADMIN_PANEL_DISCOVERY",
+          "severity": "low",
+          "riskDelta": 10,
+          "description": "Adversary scanner encounters high-interaction decoy port 8089.",
+          "delayMs": 1200
+        },
+        {
+          "stepNumber": 2,
+          "actionName": "Decoy Login Page Reconnaissance",
+          "resourceName": "Internal Admin Portal",
+          "resourceId": "AST-DEC-01",
+          "eventType": "DECOY_LOGIN_ATTEMPT",
+          "severity": "medium",
+          "riskDelta": 15,
+          "description": "Attacker loads fake login screen and probes SSO redirect parameters.",
+          "delayMs": 1500
+        },
+        {
+          "stepNumber": 3,
+          "actionName": "Dictionary Credential Trial",
+          "resourceName": "Internal Admin Portal",
+          "resourceId": "AST-DEC-01",
+          "eventType": "DECOY_LOGIN_ATTEMPT",
+          "severity": "high",
+          "riskDelta": 25,
+          "description": "Automated stuffing script submits administrative dictionary combinations.",
+          "delayMs": 1800
+        },
+        {
+          "stepNumber": 4,
+          "actionName": "Canary Token Tripped",
+          "resourceName": "Internal Admin Portal",
+          "resourceId": "AST-DEC-01",
+          "eventType": "CANARY_TOKEN_TRIGGERED",
+          "severity": "critical",
+          "riskDelta": 30,
+          "description": "Adversary enters seeded canary password triggering targeted telemetry broadcast.",
+          "delayMs": 2000
+        }
+      ]
+    },
+    {
+      "id": "SCN-DB-EXFIL",
+      "title": "Database Reconnaissance & Exfiltration",
+      "description": "Simulates internal lateral movement targeting the fictional Payroll Database, schema inspection, and batch data export.",
+      "threatActorProfile": "Compromised Internal Host / Insider Threat",
+      "expectedTTP": "T1087 (Account Discovery), T1005 (Data from Local System), T1567 (Exfiltration Over Web Service)",
+      "estimatedDurationSeconds": 10,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "actionName": "Decoy Database Enumeration",
+          "resourceName": "Finance Database (Payroll 2026)",
+          "resourceId": "AST-DEC-02",
+          "eventType": "DATABASE_QUERY_EXPLORATION",
+          "severity": "medium",
+          "riskDelta": 15,
+          "description": "Attacker queries information_schema to map fake compensation tables.",
+          "delayMs": 1400
+        },
+        {
+          "stepNumber": 2,
+          "actionName": "Sensitive Table Sampling",
+          "resourceName": "Finance Database (Payroll 2026)",
+          "resourceId": "AST-DEC-02",
+          "eventType": "DATABASE_QUERY_EXPLORATION",
+          "severity": "high",
+          "riskDelta": 20,
+          "description": "Queries SELECT * FROM mock_payroll_2026 LIMIT 5 to inspect executive salaries.",
+          "delayMs": 1600
+        },
+        {
+          "stepNumber": 3,
+          "actionName": "Simulated Data Dump Execution",
+          "resourceName": "Finance Database (Payroll 2026)",
+          "resourceId": "AST-DEC-02",
+          "eventType": "DATA_EXPORT_ATTEMPT",
+          "severity": "critical",
+          "riskDelta": 35,
+          "description": "Attacker triggers batch CSV dump command on synthetic table.",
+          "delayMs": 2200
+        }
+      ]
+    },
+    {
+      "id": "SCN-CONFIG-CANARY",
+      "title": "Lateral Movement via Config File Canaries",
+      "description": "Simulates an adversary searching filesystem directories for uncommitted environment variables, secrets, and cloud configuration files.",
+      "threatActorProfile": "Advanced Threat Actor / Post-Compromise",
+      "expectedTTP": "T1083 (File and Directory Discovery), T1552 (Unsecured Credentials)",
+      "estimatedDurationSeconds": 8,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "actionName": "Filesystem Reconnaissance",
+          "resourceName": "Backup Configuration & Cloud Keys",
+          "resourceId": "AST-DEC-04",
+          "eventType": "DIRECTORY_TRAVERSAL",
+          "severity": "low",
+          "riskDelta": 10,
+          "description": "Scanning directories for .bak, .env, and .conf patterns.",
+          "delayMs": 1200
+        },
+        {
+          "stepNumber": 2,
+          "actionName": "Canary Config Download",
+          "resourceName": "Backup Configuration & Cloud Keys",
+          "resourceId": "AST-DEC-04",
+          "eventType": "CONFIGURATION_DOWNLOAD",
+          "severity": "high",
+          "riskDelta": 25,
+          "description": "Attacker copies decoy .env.production.bak with honey AWS keys.",
+          "delayMs": 1800
+        },
+        {
+          "stepNumber": 3,
+          "actionName": "Canary Key Validation Trip",
+          "resourceName": "Backup Configuration & Cloud Keys",
+          "resourceId": "AST-DEC-04",
+          "eventType": "CANARY_TOKEN_TRIGGERED",
+          "severity": "critical",
+          "riskDelta": 35,
+          "description": "Honey credentials ping SENTRIX canary gateway with source IP.",
+          "delayMs": 2000
+        }
+      ]
+    },
+    {
+      "id": "SCN-MULTI-STEP",
+      "title": "Multi-Stage Advanced Deception Trap",
+      "description": "End-to-end multi-vector scenario chaining API exploration, document downloads, database inspection, and admin panel engagement.",
+      "threatActorProfile": "Coordinated Adversary Campaign",
+      "expectedTTP": "Full Cyber Kill Chain (Recon -> Weaponization -> Lateral Movement -> Exfiltration)",
+      "estimatedDurationSeconds": 12,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "actionName": "API Endpoint Probing",
+          "resourceName": "Internal API Documentation (Swagger)",
+          "resourceId": "AST-DEC-05",
+          "eventType": "DIRECTORY_TRAVERSAL",
+          "severity": "medium",
+          "riskDelta": 15,
+          "description": "Spidering internal Swagger definitions to discover unauthenticated routes.",
+          "delayMs": 1200
+        },
+        {
+          "stepNumber": 2,
+          "actionName": "Confidential M&A Bait Download",
+          "resourceName": "Executive M&A Strategic Plan 2026",
+          "resourceId": "AST-DEC-08",
+          "eventType": "SENSITIVE_FILE_READ",
+          "severity": "high",
+          "riskDelta": 25,
+          "description": "Targeted exfiltration of honeypot executive strategy document.",
+          "delayMs": 1600
+        },
+        {
+          "stepNumber": 3,
+          "actionName": "Decoy Admin Escalation",
+          "resourceName": "Internal Admin Portal",
+          "resourceId": "AST-DEC-01",
+          "eventType": "DECOY_LOGIN_ATTEMPT",
+          "severity": "high",
+          "riskDelta": 25,
+          "description": "Attempting authentication on discovered internal administrative node.",
+          "delayMs": 1800
+        },
+        {
+          "stepNumber": 4,
+          "actionName": "Batch Payroll Extraction",
+          "resourceName": "Finance Database (Payroll 2026)",
+          "resourceId": "AST-DEC-02",
+          "eventType": "DATA_EXPORT_ATTEMPT",
+          "severity": "critical",
+          "riskDelta": 35,
+          "description": "Automated script attempts exfiltration of decoy payroll database.",
+          "delayMs": 2200
+        }
+      ]
+    }
+  ]
+}

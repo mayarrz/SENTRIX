@@ -1,0 +1,6 @@
+{
+  "name": "SENTRIX — Adaptive Cyber Deception Platform",
+  "description": "Educational cyber deception and decoy operations platform simulating high-fidelity corporate decoys, threat monitoring, and adaptive risk analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["local_honeypot_telemetry", "adaptive_deception", "risk_analysis"]
+}
